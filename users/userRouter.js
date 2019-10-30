@@ -42,7 +42,15 @@ router.get("/:id/posts", validateUserId, (req, res) => {
     });
 });
 
-router.delete("/:id", (req, res) => {});
+router.delete("/:id", validateUserId, (req, res) => {
+    users.remove(req.user.id)
+    .then( user => {
+        res.status(200).json({message: `User with id of ${req.user.id} successfully deleted`})
+    })
+    .catch(err => {
+        res.status(500).json({message: `Something ewnt wrong deleting the user with the id of ${req.user.id}: ${err.message}`})
+    })
+});
 
 router.put("/:id", (req, res) => {});
 
