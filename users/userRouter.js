@@ -16,12 +16,23 @@ router.get('/', (req, res) => {
         res.status(200).json(users)
     })
     .catch(err => {
-        res.status(500).json(err)
+        res.status(500).json({message: "Error retrieving users: " + err.message})
     })
 });
 
 router.get('/:id', (req, res) => {
-
+    const { id } = req.params;
+    users.getById(id)
+    .then(user => {
+        if(user){
+            res.status(200).json(user)
+        } else {
+            res.status(404).json({message: `User with id of ${id} does not exist`})
+        }
+    })
+    .catch(err => {
+        res.status(500).json({message: `Error retrieving user with id of ${id}: ${err.message}`})
+    })
 });
 
 router.get('/:id/posts', (req, res) => {
