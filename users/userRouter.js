@@ -2,7 +2,15 @@ const express = require("express");
 const users = require("./userDb");
 const router = express.Router();
 
-router.post("/", (req, res) => {});
+router.post("/", validateUser, (req, res) => {
+    users.insert(req.body)
+    .then(user => {
+        res.status(201).json(user)
+    })
+    .catch(err => {
+        res.status(500).json({message: "Something went wrong trying to create new user: " + err.message})
+    })
+});
 
 router.post("/:id/posts", (req, res) => {});
 
@@ -20,7 +28,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:id", validateUserId, (req, res) => {
-  res.json(req.user);
+  res.status(200).json(req.user);
 });
 
 router.get("/:id/posts", validateUserId, (req, res) => {
@@ -79,7 +87,15 @@ function validateUserId(req, res, next) {
     });
 }
 
-function validateUser(req, res, next) {}
+function validateUser(req, res, next) {
+    if(!Object.keys(req.body).length){
+        res.status(400).json({message: "Missing user data"})
+    } else if(!req.body.name){
+        res.status(400).json({message: "Missing required name field"})
+    } else {
+        next();
+    }
+}
 
 function validatePost(req, res, next) {}
 
