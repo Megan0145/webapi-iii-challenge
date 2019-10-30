@@ -36,7 +36,18 @@ router.get('/:id', (req, res) => {
 });
 
 router.get('/:id/posts', (req, res) => {
-
+    const { id } = req.params;
+    users.getUserPosts(id)
+    .then(posts => {
+        if(posts.length){
+             res.status(200).json(posts)
+        } else {
+            res.status(200).json({message: "This user doesn't have any posts"})
+        }
+    })
+    .catch(err => {
+        res.status(500).json({message: `Error retrieving posts for user with id of ${id}: ${err.message}`})
+    })
 });
 
 router.delete('/:id', (req, res) => {
