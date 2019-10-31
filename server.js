@@ -17,6 +17,6 @@ server.get('/', (req, res) => {
 function logger(req, res, next) {
   console.log(`\n***NEW REQUEST*** \nRequest Method: ${req.method} \nRequest URL: ${req.url} \nRequest Timestamp: ${Date.now()}\n`);
   next();
-};
+}
 
 module.exports = server;
